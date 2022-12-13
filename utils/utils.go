@@ -7,12 +7,6 @@ import (
 	"xorm.io/xorm"
 )
 
-// for connect general Database
-//const dataSourceName = "oracle://pdbadmin:oracle@192.168.31.23:1521/pdb1"
-
-// for connect ADB
-//const dataSourceName = `user="admin" password="ToDo" connectString="tcps://adb.ap-singapore-1.oraclecloud.com:1522/g56e4c08bfdf01c_myatp_low.adb.oraclecloud.com?wallet_location=/u01/wallets/Wallet_myatp/"`
-
 var (
 	DBEngine     *xorm.Engine
 	errNewEngine error
