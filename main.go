@@ -25,7 +25,7 @@ func handleInTransaction(session *xorm.Session) (interface{}, error) {
 	var user model.TblUser
 	t := time.Now().Format(timeTemplate)
 	user = model.TblUser{
-		Id:         6,
+		Id:         7,
 		Name:       "Tom",
 		NumOfTried: 1,
 		Created:    t,
