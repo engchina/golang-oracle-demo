@@ -10,7 +10,6 @@ require (
 require (
 	github.com/go-logfmt/logfmt v0.5.1 // indirect
 	github.com/go-logr/logr v1.2.3 // indirect
-	github.com/go-sql-driver/mysql v1.7.0 // indirect
 	github.com/goccy/go-json v0.8.1 // indirect
 	github.com/godror/knownpb v0.1.0 // indirect
 	github.com/golang/snappy v0.0.4 // indirect
