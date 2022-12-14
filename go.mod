@@ -37,3 +37,7 @@ require (
 	gopkg.in/yaml.v3 v3.0.1 // indirect
 	xorm.io/builder v0.3.11-0.20220531020008-1bd24a7dc978 // indirect
 )
+
+replace (
+	xorm.io/xorm => /u01/workspace/gopath/src/github.com/engchina/xorm
+)
