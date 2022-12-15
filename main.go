@@ -2,8 +2,8 @@ package main
 
 import (
 	"fmt"
+	"github.com/engchina/golang-oracle-demo/config"
 	"github.com/engchina/golang-oracle-demo/model"
-	"github.com/engchina/golang-oracle-demo/utils"
 	_ "github.com/godror/godror"
 	"time"
 	"xorm.io/xorm"
@@ -83,7 +83,7 @@ func AddTryCountWithLock(session *xorm.Session, myUser *model.MyUser) (interface
 
 func main() {
 	var MyUserDBEngine model.MyUserEngine
-	MyUserDBEngine.Engine = utils.DBEngine
+	MyUserDBEngine.Engine = config.DBEngine
 	// create table
 	err := MyUserDBEngine.Sync(new(model.MyUser))
 	if err != nil {
@@ -92,7 +92,7 @@ func main() {
 
 	// insert
 	var newMyUser model.MyUser
-	newMyUser.UserId = "70"
+	newMyUser.UserId = "120"
 	newMyUser.Name = "first"
 	resp, err := MyUserDBEngine.Transaction(Insert, &newMyUser)
 	if err != nil {

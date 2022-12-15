@@ -1,7 +1,8 @@
-package utils
+package config
 
 import (
 	"fmt"
+	_ "github.com/godror/godror"
 	"github.com/spf13/viper"
 	"time"
 	"xorm.io/xorm"
@@ -36,12 +37,14 @@ func init() {
 		panic(fmt.Errorf("error on ping db: %w", err))
 	}
 
-	DBEngine.ShowSQL(true)
-	DBEngine.Logger().SetLevel(log.LOG_DEBUG)
-	customizedGonicMapper := names.NewPrefixMapper(names.GonicMapper{}, "TBL_")
-	DBEngine.SetTableMapper(customizedGonicMapper)
+	DBEngine.ShowSQL(false)
+	//DBEngine.Logger().SetLevel(log.LOG_DEBUG)
+	DBEngine.Logger().SetLevel(log.LOG_INFO)
+	DBEngine.SetTableMapper(names.GonicMapper{})
 	DBEngine.SetColumnMapper(names.GonicMapper{})
 
+	//DBEngine.TZLocation, _ = time.LoadLocation("Asia/Shanghai")
+	//DBEngine.TZLocation, _ = time.LoadLocation("Asia/Tokyo")
 	DBEngine.SetMaxOpenConns(5)
 	DBEngine.SetMaxIdleConns(2)
 	DBEngine.SetConnMaxLifetime(10 * time.Minute)

@@ -16,6 +16,7 @@ type MyUser struct {
 	NumOfTried int64     `json:"version" xorm:"version 'NUM_OF_TRIED'"`
 	Created    time.Time `json:"created" xorm:"created 'CREATED'"`
 	Updated    time.Time `json:"updated" xorm:"updated 'UPDATED'"`
+	Deleted    time.Time `json:"deleted" xorm:"deleted 'DELETED'"`
 }
 
 func (MyUser) TableName() string {
