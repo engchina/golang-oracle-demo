@@ -37,6 +37,12 @@ func GetMyUserInTxn(session *xorm.Session, userId string) (*MyUser, bool, error)
 	return myUser, has, err
 }
 
+func GetMyUserForUpdateInTxn(session *xorm.Session, userId string) (*MyUser, bool, error) {
+	myUser := new(MyUser)
+	has, err := session.ForUpdate().Table(MyUserTableName).ID(userId).Get(myUser)
+	return myUser, has, err
+}
+
 func (myUser *MyUser) UpdateMyUserInTxn(session *xorm.Session) (int64, error) {
 	count, err := session.Table(MyUserTableName).ID(myUser.UserId).Update(myUser)
 	return count, err
