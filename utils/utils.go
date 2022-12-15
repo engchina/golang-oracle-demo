@@ -24,8 +24,9 @@ func init() {
 	}
 
 	// init database connection
+	driverName := viper.GetString("driverName")
 	dataSourceName := viper.GetString("dataSourceName")
-	DBEngine, errNewEngine = xorm.NewEngine("godror", dataSourceName)
+	DBEngine, errNewEngine = xorm.NewEngine(driverName, dataSourceName)
 	if errNewEngine != nil {
 		panic(fmt.Errorf("error in init new engine %w", errNewEngine))
 	}

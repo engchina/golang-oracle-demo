@@ -9,75 +9,9 @@ import (
 	"xorm.io/xorm"
 )
 
-const (
-	timeTemplate = "2006-01-02 15:04:05.000000"
-)
-
-func handleInTransaction(session *xorm.Session) (interface{}, error) {
-	// create table, run once
-	//err := session.Sync(new(model.TblUser))
-	//if err != nil {
-	//	panic(fmt.Errorf("error creating table: %w", err))
-	//}
-
+func Insert(session *xorm.Session, myUser *model.MyUser) (interface{}, error) {
 	resp := make(map[string]interface{})
-
-	var user model.TblUser
-	t := time.Now().Format(timeTemplate)
-	user = model.TblUser{
-		Id:      16,
-		Name:    "Tom",
-		Version: 1,
-		Created: t,
-		Updated: t,
-	}
-
-	affected, err := user.InsertTblUserInSession(session)
-	if err != nil {
-		return nil, err
-	}
-	fmt.Printf("affected is: %#v\n", affected)
-
-	var userModel *model.TblUser
-	userModel, _, err = model.GetTblUserInSession(session, user.Id)
-	if err != nil {
-		return nil, err
-	}
-	fmt.Printf("user is: %#v\n", userModel)
-	time.Sleep(1 * time.Second)
-
-	userModel.Name = "John"
-	affected, err = userModel.UpdateTblUserInSession(session)
-	if err != nil {
-		return nil, err
-	}
-	fmt.Printf("affected is: %#v\n", affected)
-	time.Sleep(1 * time.Second)
-
-	userModel, _, err = model.GetTblUserInSession(session, user.Id)
-	if err != nil {
-		return nil, err
-	}
-	fmt.Printf("user is: %#v\n", userModel)
-
-	resp["data"] = "success"
-	return resp, nil
-}
-
-func Insert(session *xorm.Session, userId int64) (interface{}, error) {
-	resp := make(map[string]interface{})
-
-	var user model.TblUser
-	t := time.Now().Format(timeTemplate)
-	user = model.TblUser{
-		Id:      userId,
-		Name:    "Tom",
-		Version: 1,
-		Created: t,
-		Updated: t,
-	}
-
-	affected, err := user.InsertTblUserInSession(session)
+	affected, err := myUser.InsertMyUserInTxn(session)
 	if err != nil {
 		return nil, err
 	}
@@ -87,52 +21,63 @@ func Insert(session *xorm.Session, userId int64) (interface{}, error) {
 	return resp, nil
 }
 
-func AddTryCount(session *xorm.Session, userId int64) (interface{}, error) {
-	resp := make(map[string]interface{})
-
-	t := time.Now().Format(timeTemplate)
-
-	var userModel *model.TblUser
-	userModel, _, err := model.GetTblUserInSession(session, userId)
+func AddTryCount(session *xorm.Session, myUser *model.MyUser) (interface{}, error) {
+	var myUserModel *model.MyUser
+	myUserModel, _, err := model.GetMyUserInTxn(session, myUser.UserId)
 	if err != nil {
 		return nil, err
 	}
-	fmt.Printf("user is: %#v\n", userModel)
+	fmt.Printf("myUserModel is: %#v\n", myUserModel)
 	time.Sleep(2 * time.Second)
 
-	userModel.Name = "opc"
-	userModel.Created = t
-	userModel.Updated = t
-	numOfTried := userModel.Version
-	userModel.Version = numOfTried + 1
-	affected, err := userModel.UpdateTblUserInSessionWithTried(session, numOfTried)
+	myUserModel.Name = myUser.Name
+	affected, err := myUserModel.UpdateMyUserInTxn(session)
 	if err != nil {
 		return nil, err
 	}
 	fmt.Printf("affected is: %#v\n", affected)
 	time.Sleep(2 * time.Second)
 
-	userModel, _, err = model.GetTblUserInSession(session, userId)
-	if err != nil {
-		return nil, err
-	}
-	fmt.Printf("user is: %#v\n", userModel)
-
-	resp["data"] = "success"
-	return resp, nil
+	return "success", nil
 }
 
 func main() {
-	var MyDBEngine model.MyEngine
-	MyDBEngine.Engine = utils.DBEngine
-	//resp, err := utils.DBEngine.Transaction(handleInTransaction)
-	var newUserId int64
-	newUserId = 26
-	resp, err := MyDBEngine.Transaction(Insert, newUserId)
+	var MyUserDBEngine model.MyUserEngine
+	MyUserDBEngine.Engine = utils.DBEngine
+	// create table
+	err := MyUserDBEngine.Sync(new(model.MyUser))
+	if err != nil {
+		panic(err)
+	}
+
+	// insert
+	var newMyUser model.MyUser
+	newMyUser.UserId = "20"
+	newMyUser.Name = "first"
+	resp, err := MyUserDBEngine.Transaction(Insert, &newMyUser)
+	if err != nil {
+		panic(err)
+	}
+
+	// update
+	newMyUser.Name = "second"
+	resp, err = MyUserDBEngine.Transaction(AddTryCount, &newMyUser)
 	if err != nil {
 		panic("err: " + err.Error())
 	}
-	resp, err = MyDBEngine.Transaction(AddTryCount, newUserId)
+	fmt.Printf("resp: %#v\n", resp)
+
+	// update
+	newMyUser.Name = "third"
+	resp, err = MyUserDBEngine.Transaction(AddTryCount, &newMyUser)
+	if err != nil {
+		panic("err: " + err.Error())
+	}
+	fmt.Printf("resp: %#v\n", resp)
+
+	// update
+	newMyUser.Name = "fourth"
+	resp, err = MyUserDBEngine.Transaction(AddTryCount, &newMyUser)
 	if err != nil {
 		panic("err: " + err.Error())
 	}
