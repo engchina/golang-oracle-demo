@@ -40,4 +40,5 @@ require (
 
 replace (
 	xorm.io/xorm => /u01/workspace/gopath/src/github.com/engchina/xorm
+	github.com/godror/godror => /u01/workspace/gopath/src/github.com/engchina/godror
 )

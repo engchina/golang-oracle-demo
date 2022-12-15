@@ -100,7 +100,7 @@ func AddTryCount(session *xorm.Session, userId int64) (interface{}, error) {
 	fmt.Printf("user is: %#v\n", userModel)
 	time.Sleep(2 * time.Second)
 
-	userModel.Name = "OCI"
+	userModel.Name = "opc"
 	userModel.Created = t
 	userModel.Updated = t
 	numOfTried := userModel.Version
@@ -127,7 +127,7 @@ func main() {
 	MyDBEngine.Engine = utils.DBEngine
 	//resp, err := utils.DBEngine.Transaction(handleInTransaction)
 	var newUserId int64
-	newUserId = 22
+	newUserId = 26
 	resp, err := MyDBEngine.Transaction(Insert, newUserId)
 	if err != nil {
 		panic("err: " + err.Error())

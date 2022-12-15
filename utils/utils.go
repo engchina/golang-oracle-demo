@@ -5,6 +5,8 @@ import (
 	"github.com/spf13/viper"
 	"time"
 	"xorm.io/xorm"
+	"xorm.io/xorm/log"
+	"xorm.io/xorm/names"
 )
 
 var (
@@ -32,6 +34,12 @@ func init() {
 	if err != nil {
 		panic(fmt.Errorf("error on ping db: %w", err))
 	}
+
+	DBEngine.ShowSQL(true)
+	DBEngine.Logger().SetLevel(log.LOG_DEBUG)
+	customizedGonicMapper := names.NewPrefixMapper(names.GonicMapper{}, "TBL_")
+	DBEngine.SetTableMapper(customizedGonicMapper)
+	DBEngine.SetColumnMapper(names.GonicMapper{})
 
 	DBEngine.SetMaxOpenConns(5)
 	DBEngine.SetMaxIdleConns(2)
