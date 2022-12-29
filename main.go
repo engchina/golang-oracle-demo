@@ -1,6 +1,7 @@
 package main
 
 import (
+	"context"
 	"fmt"
 	"github.com/engchina/golang-oracle-demo/config"
 	"github.com/engchina/golang-oracle-demo/model"
@@ -84,6 +85,10 @@ func AddTryCountWithLock(session *xorm.Session, myUser *model.MyUser) (interface
 func main() {
 	var MyUserDBEngine model.MyUserEngine
 	MyUserDBEngine.Engine = config.DBEngine
+	// set context with timeout
+	ctx, cancel := context.WithTimeout(context.Background(), 1*time.Minute)
+	defer cancel()
+	MyUserDBEngine.Engine.SetDefaultContext(ctx)
 	// create table
 	err := MyUserDBEngine.Sync(new(model.MyUser))
 	if err != nil {
@@ -92,28 +97,28 @@ func main() {
 
 	// insert
 	var newMyUser model.MyUser
-	newMyUser.UserId = "120"
+	newMyUser.UserId = "200"
 	newMyUser.Name = "first"
 	resp, err := MyUserDBEngine.Transaction(Insert, &newMyUser)
 	if err != nil {
 		panic(err)
 	}
 
-	// update
-	newMyUser.Name = "second"
-	resp, err = MyUserDBEngine.Transaction(AddTryCount, &newMyUser)
-	if err != nil {
-		panic("err: " + err.Error())
-	}
-	fmt.Printf("resp: %#v\n", resp)
-
-	// update
-	newMyUser.Name = "third"
-	resp, err = MyUserDBEngine.Transaction(AddTryCount, &newMyUser)
-	if err != nil {
-		panic("err: " + err.Error())
-	}
-	fmt.Printf("resp: %#v\n", resp)
+	//// update
+	//newMyUser.Name = "second"
+	//resp, err = MyUserDBEngine.Transaction(AddTryCount, &newMyUser)
+	//if err != nil {
+	//	panic("err: " + err.Error())
+	//}
+	//fmt.Printf("resp: %#v\n", resp)
+	//
+	//// update
+	//newMyUser.Name = "third"
+	//resp, err = MyUserDBEngine.Transaction(AddTryCount, &newMyUser)
+	//if err != nil {
+	//	panic("err: " + err.Error())
+	//}
+	//fmt.Printf("resp: %#v\n", resp)
 
 	// update
 	newMyUser.Name = "fourth"
@@ -123,21 +128,21 @@ func main() {
 	}
 	fmt.Printf("resp: %#v\n", resp)
 
-	// update
-	newMyUser.Name = "fifth"
-	resp, err = MyUserDBEngine.Transaction(AddTryCountWithLock, &newMyUser)
-	if err != nil {
-		panic("err: " + err.Error())
-	}
-	fmt.Printf("resp: %#v\n", resp)
-
-	// update
-	newMyUser.Name = "sixth"
-	resp, err = MyUserDBEngine.Transaction(AddTryCountWithLock, &newMyUser)
-	if err != nil {
-		panic("err: " + err.Error())
-	}
-	fmt.Printf("resp: %#v\n", resp)
+	//// update
+	//newMyUser.Name = "fifth"
+	//resp, err = MyUserDBEngine.Transaction(AddTryCountWithLock, &newMyUser)
+	//if err != nil {
+	//	panic("err: " + err.Error())
+	//}
+	//fmt.Printf("resp: %#v\n", resp)
+	//
+	//// update
+	//newMyUser.Name = "sixth"
+	//resp, err = MyUserDBEngine.Transaction(AddTryCountWithLock, &newMyUser)
+	//if err != nil {
+	//	panic("err: " + err.Error())
+	//}
+	//fmt.Printf("resp: %#v\n", resp)
 }
 
 /*

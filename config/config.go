@@ -19,6 +19,7 @@ func init() {
 	// init config
 	viper.SetConfigName("app")
 	viper.AddConfigPath("config")
+	viper.SetConfigType("yaml")
 	err := viper.ReadInConfig()
 	if err != nil {
 		panic(fmt.Errorf("error in read config file %w", err))

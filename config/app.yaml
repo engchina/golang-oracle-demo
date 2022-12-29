@@ -2,5 +2,5 @@ driverName: godror
 # for connect general Database
 dataSourceName: "oracle://pdbadmin:oracle@192.168.31.23:1521/pdb1"
 # for connect ADB
-#dataSourceName2: `user="admin" password="ToDo" connectString="tcps://adb.ap-singapore-1.oraclecloud.com:1522/g56e4c08bfdf01c_myatp_low.adb.oraclecloud.com?wallet_location=/u01/wallets/Wallet_myatp/"`
+#dataSourceName: "user=\"admin\" password=\"ToDo\" connectString=\"tcps://adb.ap-singapore-1.oraclecloud.com:1522/g56e4c08bfdf01c_myatp_low.adb.oraclecloud.com?wallet_location=/u01/wallets/Wallet_myatp/\""
 
