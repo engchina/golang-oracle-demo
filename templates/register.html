@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <link rel="shortcut icon" href="../static/favicon.ico" type="image/x-icon">
+    <link rel="stylesheet" href="../static/css/bootstrap.css">
+    <script src="../static/js/bootstrap.js"></script>
+    <title>Index</title>
+</head>
+<body>
+
+<div class="container">
+    <div class="row">
+        <div class="col-2">
+        </div>
+        <div class="col-8">
+            &nbsp;
+        </div>
+        <div class="col-2">
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-2">
+        </div>
+        <div class="col-8">
+            <div class="p-3 mb-3 {{.msgColor}}">Affected is : {{.affected}}</div>
+        </div>
+        <div class="col-2">
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-2">
+        </div>
+        <div class="col-8">
+            &nbsp;
+        </div>
+        <div class="col-2">
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-2">
+        </div>
+        <div class="col-8">
+            <form>
+                <div class="mb-3">
+                    <label for="exampleInputUserId" class="form-label">User ID</label>
+                    <input type="text" class="form-control" id="exampleInputUserId" name="userId" value="{{.myuser.UserId}}">
+                </div>
+                <div class="mb-3">
+                    <label for="exampleInputUserName" class="form-label">User Name</label>
+                    <input type="text" class="form-control" id="exampleInputUserName" name="name" value="{{.myuser.Name}}" aria-describedby="usernameHelp">
+                    <div id="usernameHelp" class="form-text">We'll never share your name with anyone else.</div>
+                </div>
+                <!--<div class="mb-3 form-check">
+                    <input type="checkbox" class="form-check-input" id="exampleSleepCheck">
+                    <label class="form-check-label" for="exampleSleepCheck">Sleep 10 seconds</label>
+                </div>-->
+                <button type="submit" formaction="/register" formmethod="post" class="btn btn-primary">Submit</button>&nbsp;&nbsp;
+                <button type="submit" formaction="/update" formmethod="post" class="btn btn-primary">Submit With Optimistic Lock(Sleep 5s)</button>&nbsp;&nbsp;
+                <button type="submit" formaction="/updatewithlock" formmethod="post" class="btn btn-primary">Submit With Pessimistic Lock(Sleep 5s)</button>&nbsp;&nbsp;
+            </form>
+        </div>
+        <div class="col-2">
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-2">
+        </div>
+        <div class="col-8">
+            &nbsp;
+        </div>
+        <div class="col-2">
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-2">
+        </div>
+        <div class="col-8">
+            <table class="table table-bordered caption-top">
+                <caption>List of Users</caption>
+                <thead>
+                <tr>
+                    <th scope="col">User ID</th>
+                    <th scope="col">User Name</th>
+                    <th scope="col">Num Of Tried</th>
+                    <th scope="col">Created</th>
+                    <th scope="col">Updated</th>
+                </tr>
+                </thead>
+                <tbody>
+                {{range $idx, $myUser := .allMyUser}}
+                <tr>
+                    <td>{{$myUser.UserId}}</td>
+                    <td>{{$myUser.Name}}</td>
+                    <td>{{$myUser.NumOfTried}}</td>
+                    <td>{{$myUser.Created}}</td>
+                    <td>{{$myUser.Updated}}</td>
+                </tr>
+                {{end}}
+                </tbody>
+            </table>
+        </div>
+        <div class="col-2">
+        </div>
+    </div>
+
+</div>
+
+</body>
+</html>

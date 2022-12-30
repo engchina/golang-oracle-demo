@@ -1,6 +1,7 @@
 package model
 
 import (
+	"fmt"
 	_ "github.com/godror/godror"
 	"time"
 	"xorm.io/xorm"
@@ -11,8 +12,8 @@ const (
 )
 
 type MyUser struct {
-	UserId     string    `json:"userId"  xorm:"varchar(200) pk 'USER_ID'"`
-	Name       string    `json:"name"    xorm:"varchar(200) notnull 'NAME'"`
+	UserId     string    `json:"userId"  xorm:"varchar(200) pk 'USER_ID'"   form:"userId"`
+	Name       string    `json:"name"    xorm:"varchar(200) notnull 'NAME'" form:"name"`
 	NumOfTried int64     `json:"version" xorm:"version 'NUM_OF_TRIED'"`
 	Created    time.Time `json:"created" xorm:"created 'CREATED'"`
 	Updated    time.Time `json:"updated" xorm:"updated 'UPDATED'"`
@@ -23,6 +24,10 @@ func (MyUser) TableName() string {
 	return MyUserTableName
 }
 
+func (myUser MyUser) String() string {
+	return fmt.Sprintf("{%s %s %d %s %s %s}", myUser.UserId, myUser.Name, myUser.NumOfTried, myUser.Created.Format("2006-01-02 15:04:05"), myUser.Updated.Format("2006-01-02 15:04:05"), myUser.Deleted.Format("2006-01-02 15:04:05"))
+}
+
 type MyUserEngine struct {
 	*xorm.Engine
 }
@@ -30,6 +35,12 @@ type MyUserEngine struct {
 func (myUser *MyUser) InsertMyUserInTxn(session *xorm.Session) (int64, error) {
 	count, err := session.Table(MyUserTableName).Insert(myUser)
 	return count, err
+}
+
+func GetAllMyUser(session *xorm.Session) ([]*MyUser, error) {
+	allData := make([]*MyUser, 0)
+	err := session.Table(MyUserTableName).OrderBy("user_id").Find(&allData)
+	return allData, err
 }
 
 func GetMyUserInTxn(session *xorm.Session, userId string) (*MyUser, bool, error) {
