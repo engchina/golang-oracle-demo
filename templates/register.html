@@ -5,7 +5,7 @@
     <link rel="shortcut icon" href="../static/favicon.ico" type="image/x-icon">
     <link rel="stylesheet" href="../static/css/bootstrap.css">
     <script src="../static/js/bootstrap.js"></script>
-    <title>Index</title>
+    <title>User Register</title>
 </head>
 <body>
 
@@ -44,20 +44,27 @@
             <form>
                 <div class="mb-3">
                     <label for="exampleInputUserId" class="form-label">User ID</label>
-                    <input type="text" class="form-control" id="exampleInputUserId" name="userId" value="{{.myuser.UserId}}">
+                    <input type="text" class="form-control" id="exampleInputUserId" name="userId"
+                           value="{{.myuser.UserId}}">
                 </div>
                 <div class="mb-3">
                     <label for="exampleInputUserName" class="form-label">User Name</label>
-                    <input type="text" class="form-control" id="exampleInputUserName" name="name" value="{{.myuser.Name}}" aria-describedby="usernameHelp">
+                    <input type="text" class="form-control" id="exampleInputUserName" name="name"
+                           value="{{.myuser.Name}}" aria-describedby="usernameHelp">
                     <div id="usernameHelp" class="form-text">We'll never share your name with anyone else.</div>
                 </div>
                 <!--<div class="mb-3 form-check">
                     <input type="checkbox" class="form-check-input" id="exampleSleepCheck">
                     <label class="form-check-label" for="exampleSleepCheck">Sleep 10 seconds</label>
                 </div>-->
-                <button type="submit" formaction="/register" formmethod="post" class="btn btn-primary">Submit</button>&nbsp;&nbsp;
-                <button type="submit" formaction="/update" formmethod="post" class="btn btn-primary">Submit With Optimistic Lock(Sleep 5s)</button>&nbsp;&nbsp;
-                <button type="submit" formaction="/updatewithlock" formmethod="post" class="btn btn-primary">Submit With Pessimistic Lock(Sleep 5s)</button>&nbsp;&nbsp;
+                <button type="submit" formaction="/insertorupdate" formmethod="post" class="btn btn-primary">Insert or Update
+                </button>&nbsp;&nbsp;
+                <button type="submit" formaction="/updatewithoptimisticlock" formmethod="post" class="btn btn-primary">
+                    Update With Optimistic Lock(Sleep 5s)
+                </button>&nbsp;&nbsp;
+                <button type="submit" formaction="/updatewithpessimisticlock" formmethod="post" class="btn btn-primary">
+                    Update With Pessimistic Lock(Sleep 5s)
+                </button>&nbsp;&nbsp;
             </form>
         </div>
         <div class="col-2">
@@ -89,7 +96,7 @@
                 </tr>
                 </thead>
                 <tbody>
-                {{range $idx, $myUser := .allMyUser}}
+                {{range $idx, $myUser := .myUserList}}
                 <tr>
                     <td>{{$myUser.UserId}}</td>
                     <td>{{$myUser.Name}}</td>

@@ -1,7 +1,6 @@
-package model
+package models
 
 import (
-	"fmt"
 	_ "github.com/godror/godror"
 	"time"
 	"xorm.io/xorm"
@@ -20,27 +19,12 @@ type MyUser struct {
 	Deleted    time.Time `json:"deleted" xorm:"deleted 'DELETED'"`
 }
 
-func (MyUser) TableName() string {
+func (*MyUser) TableName() string {
 	return MyUserTableName
-}
-
-func (myUser MyUser) String() string {
-	return fmt.Sprintf("{%s %s %d %s %s %s}", myUser.UserId, myUser.Name, myUser.NumOfTried, myUser.Created.Format("2006-01-02 15:04:05"), myUser.Updated.Format("2006-01-02 15:04:05"), myUser.Deleted.Format("2006-01-02 15:04:05"))
 }
 
 type MyUserEngine struct {
 	*xorm.Engine
-}
-
-func (myUser *MyUser) InsertMyUserInTxn(session *xorm.Session) (int64, error) {
-	count, err := session.Table(MyUserTableName).Insert(myUser)
-	return count, err
-}
-
-func GetAllMyUser(session *xorm.Session) ([]*MyUser, error) {
-	allData := make([]*MyUser, 0)
-	err := session.Table(MyUserTableName).OrderBy("user_id").Find(&allData)
-	return allData, err
 }
 
 func GetMyUserInTxn(session *xorm.Session, userId string) (*MyUser, bool, error) {
@@ -55,6 +39,17 @@ func GetMyUserForUpdateInTxn(session *xorm.Session, userId string) (*MyUser, boo
 	return myUser, has, err
 }
 
+func GetMyUserList(session *xorm.Session) ([]*MyUser, error) {
+	allData := make([]*MyUser, 0)
+	err := session.Table(MyUserTableName).OrderBy("user_id").Find(&allData)
+	return allData, err
+}
+
+func (myUser *MyUser) InsertMyUserInTxn(session *xorm.Session) (int64, error) {
+	count, err := session.Table(MyUserTableName).Insert(myUser)
+	return count, err
+}
+
 func (myUser *MyUser) UpdateMyUserInTxn(session *xorm.Session) (int64, error) {
 	count, err := session.Table(MyUserTableName).ID(myUser.UserId).Update(myUser)
 	return count, err
@@ -62,7 +57,12 @@ func (myUser *MyUser) UpdateMyUserInTxn(session *xorm.Session) (int64, error) {
 
 func (engine *MyUserEngine) Transaction(f func(*xorm.Session, *MyUser) (interface{}, error), myUser *MyUser) (interface{}, error) {
 	session := engine.NewSession()
-	defer session.Close()
+	defer func(session *xorm.Session) {
+		err := session.Close()
+		if err != nil {
+			return
+		}
+	}(session)
 
 	if err := session.Begin(); err != nil {
 		return nil, err
