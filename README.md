@@ -14,3 +14,6 @@ SQL> startup;
 
 ### Reference:
 - https://xorm.io/
+- https://pkg.go.dev/github.com/gin-gonic/gin
+- https://pkg.go.dev/github.com/swaggo/gin-swagger
+- https://pkg.go.dev/github.com/asaskevich/govalidator

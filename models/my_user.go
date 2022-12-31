@@ -55,7 +55,7 @@ func (myUser *MyUser) UpdateMyUserInTxn(session *xorm.Session) (int64, error) {
 	return count, err
 }
 
-func (engine *MyUserEngine) Transaction(f func(*xorm.Session, *MyUser) (interface{}, error), myUser *MyUser) (interface{}, error) {
+func (engine *MyUserEngine) ReadWriteTransaction(f func(*xorm.Session, *MyUser) (interface{}, error), myUser *MyUser) (interface{}, error) {
 	session := engine.NewSession()
 	defer func(session *xorm.Session) {
 		err := session.Close()
@@ -69,6 +69,31 @@ func (engine *MyUserEngine) Transaction(f func(*xorm.Session, *MyUser) (interfac
 	}
 
 	result, err := f(session, myUser)
+	if err != nil {
+		return result, err
+	}
+
+	if err := session.Commit(); err != nil {
+		return result, err
+	}
+
+	return result, nil
+}
+
+func (engine *MyUserEngine) ReadOnlyTransaction(f func(*xorm.Session) (interface{}, error)) (interface{}, error) {
+	session := engine.NewSession()
+	defer func(session *xorm.Session) {
+		err := session.Close()
+		if err != nil {
+			return
+		}
+	}(session)
+
+	if err := session.Begin(); err != nil {
+		return nil, err
+	}
+
+	result, err := f(session)
 	if err != nil {
 		return result, err
 	}
