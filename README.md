@@ -13,7 +13,12 @@ SQL> startup;
 ```
 
 ### Reference:
+- https://pkg.go.dev/crypto/md5
 - https://xorm.io/
+- https://pkg.go.dev/github.com/godror/godror
 - https://pkg.go.dev/github.com/gin-gonic/gin
+- https://pkg.go.dev/github.com/spf13/viper
+- https://pkg.go.dev/github.com/sirupsen/logrus
 - https://pkg.go.dev/github.com/swaggo/gin-swagger
 - https://pkg.go.dev/github.com/asaskevich/govalidator
+- https://pkg.go.dev/github.com/gomodule/redigo

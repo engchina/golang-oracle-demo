@@ -16,7 +16,7 @@ var (
 )
 
 // init config
-func initConfig() {
+func InitConfig() {
 	viper.SetConfigName("application")
 	viper.AddConfigPath("config")
 	viper.SetConfigType("yaml")
@@ -27,7 +27,7 @@ func initConfig() {
 }
 
 // init database connection
-func initOracle() {
+func InitOracle() {
 	driverName := viper.GetString("oracle.driverName")
 	dataSourceName := viper.GetString("oracle.dataSourceName")
 	DBEngine, errNewEngine = xorm.NewEngine(driverName, dataSourceName)
