@@ -26,7 +26,7 @@ func IndexHandler() gin.HandlerFunc {
 		if err != nil {
 			panic(err)
 		}
-		c.HTML(http.StatusOK, "register.html", gin.H{"affected": 0, "msgColor": "bg-info text-dark", "myUserList": myUserList})
+		c.HTML(http.StatusOK, "register.html", gin.H{"showAffected": false, "affected": 0, "msgColor": "bg-info text-dark", "myUserList": myUserList})
 	}
 }
 
@@ -51,7 +51,7 @@ func InsertOrUpdateHandler(c *gin.Context) {
 	if err != nil {
 		panic(err)
 	}
-	c.HTML(http.StatusOK, "register.html", gin.H{"myUser": myUser, "affected": affected, "msgColor": msgColor, "myUserList": myUserList})
+	c.HTML(http.StatusOK, "register.html", gin.H{"myUser": myUser, "showAffected": true, "affected": affected, "msgColor": msgColor, "myUserList": myUserList})
 }
 
 func UpdateWithOptimisticLockHandler(c *gin.Context) {
@@ -75,7 +75,7 @@ func UpdateWithOptimisticLockHandler(c *gin.Context) {
 	if err != nil {
 		panic(err)
 	}
-	c.HTML(http.StatusOK, "register.html", gin.H{"myUser": myUser, "affected": affected, "msgColor": msgColor, "myUserList": myUserList})
+	c.HTML(http.StatusOK, "register.html", gin.H{"myUser": myUser, "showAffected": true, "affected": affected, "msgColor": msgColor, "myUserList": myUserList})
 
 }
 
@@ -100,6 +100,6 @@ func UpdateWithPessimisticLockHandler(c *gin.Context) {
 	if err != nil {
 		panic(err)
 	}
-	c.HTML(http.StatusOK, "register.html", gin.H{"myUser": myUser, "affected": affected, "msgColor": msgColor, "myUserList": myUserList})
+	c.HTML(http.StatusOK, "register.html", gin.H{"myUser": myUser, "showAffected": true, "affected": affected, "msgColor": msgColor, "myUserList": myUserList})
 
 }

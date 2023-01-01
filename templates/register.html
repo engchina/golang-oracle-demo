@@ -19,6 +19,7 @@
         <div class="col-2">
         </div>
     </div>
+    {{ if .showAffected}}
     <div class="row">
         <div class="col-2">
         </div>
@@ -28,11 +29,15 @@
         <div class="col-2">
         </div>
     </div>
+    {{ end }}
     <div class="row">
         <div class="col-2">
         </div>
         <div class="col-8">
-            &nbsp;
+            <div class="text-center">
+                <h3> We're going to have an exciting party!</h3>
+                <h4>And YOU are invited!</h4>
+            </div>
         </div>
         <div class="col-2">
         </div>
@@ -42,22 +47,23 @@
         </div>
         <div class="col-8">
             <form>
-                <div class="mb-3">
-                    <label for="exampleInputUserId" class="form-label">User ID</label>
+                <div class="form-floating mb-3">
                     <input type="text" class="form-control" id="exampleInputUserId" name="userId"
-                           value="{{.myUser.UserId}}">
+                           value="{{.myUser.UserId}}" placeholder="User ID">
+                    <label for="exampleInputUserId">User ID</label>
                 </div>
-                <div class="mb-3">
-                    <label for="exampleInputUserName" class="form-label">User Name</label>
+                <div class="form-floating mb-3">
                     <input type="text" class="form-control" id="exampleInputUserName" name="name"
-                           value="{{.myUser.Name}}" aria-describedby="usernameHelp">
+                           value="{{.myUser.Name}}" placeholder="User Name" aria-describedby="usernameHelp">
+                    <label for="exampleInputUserName">User Name</label>
                     <div id="usernameHelp" class="form-text">We'll never share your name with anyone else.</div>
                 </div>
                 <!--<div class="mb-3 form-check">
                     <input type="checkbox" class="form-check-input" id="exampleSleepCheck">
                     <label class="form-check-label" for="exampleSleepCheck">Sleep 10 seconds</label>
                 </div>-->
-                <button type="submit" formaction="/insertorupdate" formmethod="post" class="btn btn-primary">Insert or Update
+                <button type="submit" formaction="/insertorupdate" formmethod="post" class="btn btn-primary">Insert or
+                    Update
                 </button>&nbsp;&nbsp;
                 <button type="submit" formaction="/updatewithoptimisticlock" formmethod="post" class="btn btn-primary">
                     Update With Optimistic Lock(Sleep 5s)
