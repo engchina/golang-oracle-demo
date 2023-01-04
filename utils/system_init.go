@@ -12,9 +12,9 @@ import (
 )
 
 var (
-	DBEngine           *xorm.Engine
-	MyCustomizedEngine CustomizedEngine
-	errNewEngine       error
+	DBEngine       *xorm.Engine
+	OracleDBEngine OracleEngine
+	errNewEngine   error
 )
 
 func InitLogrus() {
@@ -67,7 +67,7 @@ func InitOracle() {
 	//defer cancel()
 	//DBEngine.SetDefaultContext(ctx)
 
-	MyCustomizedEngine.Engine = DBEngine
+	OracleDBEngine.Engine = DBEngine
 }
 
 func init() {

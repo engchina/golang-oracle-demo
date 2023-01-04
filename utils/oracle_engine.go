@@ -4,11 +4,11 @@ import (
 	"xorm.io/xorm"
 )
 
-type CustomizedEngine struct {
+type OracleEngine struct {
 	*xorm.Engine
 }
 
-func (engine *CustomizedEngine) ReadWriteTransaction(f func(*xorm.Session, interface{}) (interface{}, error), myInterface interface{}) (interface{}, error) {
+func (engine *OracleEngine) ReadWriteTransaction(f func(*xorm.Session, interface{}) (interface{}, error), in interface{}) (interface{}, error) {
 	session := engine.NewSession()
 	defer func(session *xorm.Session) {
 		err := session.Close()
@@ -21,7 +21,7 @@ func (engine *CustomizedEngine) ReadWriteTransaction(f func(*xorm.Session, inter
 		return nil, err
 	}
 
-	result, err := f(session, myInterface)
+	result, err := f(session, in)
 	if err != nil {
 		return result, err
 	}
@@ -33,7 +33,7 @@ func (engine *CustomizedEngine) ReadWriteTransaction(f func(*xorm.Session, inter
 	return result, nil
 }
 
-func (engine *CustomizedEngine) ReadOnlyTransaction(f func(*xorm.Session) (interface{}, error)) (interface{}, error) {
+func (engine *OracleEngine) ReadOnlyTransaction(f func(*xorm.Session) (interface{}, error)) (interface{}, error) {
 	session := engine.NewSession()
 	defer func(session *xorm.Session) {
 		err := session.Close()

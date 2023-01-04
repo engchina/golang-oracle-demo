@@ -18,8 +18,8 @@ func GetMyUserList(session *xorm.Session) (interface{}, error) {
 }
 
 // InsertOrUpdate Insert or Update
-func InsertOrUpdate(session *xorm.Session, myInterface interface{}) (interface{}, error) {
-	myUser := myInterface.(*models.MyUser)
+func InsertOrUpdate(session *xorm.Session, in interface{}) (interface{}, error) {
+	myUser := in.(*models.MyUser)
 	var myUserModel *models.MyUser
 	myUserModel, has, err := models.GetMyUserInTxn(session, myUser.UserId)
 	if err != nil {
@@ -41,8 +41,8 @@ func InsertOrUpdate(session *xorm.Session, myInterface interface{}) (interface{}
 }
 
 // UpdateWithOptimisticLock Optimistic Lock
-func UpdateWithOptimisticLock(session *xorm.Session, myInterface interface{}) (interface{}, error) {
-	myUser := myInterface.(*models.MyUser)
+func UpdateWithOptimisticLock(session *xorm.Session, in interface{}) (interface{}, error) {
+	myUser := in.(*models.MyUser)
 	var myUserModel *models.MyUser
 	myUserModel, _, err := models.GetMyUserInTxn(session, myUser.UserId)
 	if err != nil {
@@ -60,8 +60,8 @@ func UpdateWithOptimisticLock(session *xorm.Session, myInterface interface{}) (i
 }
 
 // UpdateWithPessimisticLock Pessimistic Lock
-func UpdateWithPessimisticLock(session *xorm.Session, myInterface interface{}) (interface{}, error) {
-	myUser := myInterface.(*models.MyUser)
+func UpdateWithPessimisticLock(session *xorm.Session, in interface{}) (interface{}, error) {
+	myUser := in.(*models.MyUser)
 	var myUserModel *models.MyUser
 	myUserModel, _, err := models.GetMyUserForUpdateInTxn(session, myUser.UserId)
 	if err != nil {
