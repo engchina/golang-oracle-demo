@@ -1,9 +1,8 @@
-package utils
+package db
 
 import (
 	"fmt"
 	_ "github.com/godror/godror"
-	"github.com/sirupsen/logrus"
 	"github.com/spf13/viper"
 	"time"
 	"xorm.io/xorm"
@@ -11,15 +10,65 @@ import (
 	"xorm.io/xorm/names"
 )
 
-var (
-	DBEngine       *xorm.Engine
-	OracleDBEngine OracleEngine
-	errNewEngine   error
-)
-
-func InitLogrus() {
-	logrus.SetLevel(logrus.InfoLevel)
+type OracleEngine struct {
+	*xorm.Engine
 }
+
+func (engine *OracleEngine) ReadWriteTransaction(f func(*xorm.Session, interface{}) (interface{}, error), in interface{}) (interface{}, error) {
+	session := engine.NewSession()
+	defer func(session *xorm.Session) {
+		err := session.Close()
+		if err != nil {
+			return
+		}
+	}(session)
+
+	if err := session.Begin(); err != nil {
+		return nil, err
+	}
+
+	result, err := f(session, in)
+	if err != nil {
+		return result, err
+	}
+
+	if err := session.Commit(); err != nil {
+		return result, err
+	}
+
+	return result, nil
+}
+
+func (engine *OracleEngine) ReadOnlyTransaction(f func(*xorm.Session) (interface{}, error)) (interface{}, error) {
+	session := engine.NewSession()
+	defer func(session *xorm.Session) {
+		err := session.Close()
+		if err != nil {
+			return
+		}
+	}(session)
+
+	if err := session.Begin(); err != nil {
+		return nil, err
+	}
+
+	result, err := f(session)
+	if err != nil {
+		return result, err
+	}
+
+	if err := session.Rollback(); err != nil {
+		return result, err
+	}
+
+	return result, nil
+}
+
+var (
+	DBEngine     *xorm.Engine
+	errNewEngine error
+	OracleClient OracleEngine
+)
 
 func InitConfig() {
 	viper.SetConfigName("application")
@@ -31,7 +80,7 @@ func InitConfig() {
 	}
 }
 
-func InitOracle() {
+func InitDBEngine() {
 	driverName := viper.GetString("oracle.driverName")
 	dataSourceName := viper.GetString("oracle.dataSourceName")
 	DBEngine, errNewEngine = xorm.NewEngine(driverName, dataSourceName)
@@ -66,12 +115,14 @@ func InitOracle() {
 	//ctx, cancel := context.WithTimeout(context.Background(), 1*time.Minute)
 	//defer cancel()
 	//DBEngine.SetDefaultContext(ctx)
+}
 
-	OracleDBEngine.Engine = DBEngine
+func InitOracleClient() {
+	OracleClient.Engine = DBEngine
 }
 
 func init() {
-	InitLogrus()
 	InitConfig()
-	InitOracle()
+	InitDBEngine()
+	InitOracleClient()
 }
