@@ -56,6 +56,17 @@ func InitOracle() {
 	DBEngine.SetMaxIdleConns(2)
 	DBEngine.SetConnMaxLifetime(10 * time.Minute)
 
+	// create table
+	//err := MyUserDBEngine.Sync(new(models.MyUser))
+	//if err != nil {
+	//	panic(err)
+	//}
+
+	// set context with timeout
+	//ctx, cancel := context.WithTimeout(context.Background(), 1*time.Minute)
+	//defer cancel()
+	//DBEngine.SetDefaultContext(ctx)
+
 	MyCustomizedEngine.Engine = DBEngine
 }
 

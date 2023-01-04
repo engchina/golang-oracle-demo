@@ -51,22 +51,9 @@ func (engine *CustomizedEngine) ReadOnlyTransaction(f func(*xorm.Session) (inter
 		return result, err
 	}
 
-	if err := session.Commit(); err != nil {
+	if err := session.Rollback(); err != nil {
 		return result, err
 	}
 
 	return result, nil
 }
-
-//func init() {
-//	// set context with timeout
-//	//ctx, cancel := context.WithTimeout(context.Background(), 1*time.Minute)
-//	//defer cancel()
-//	//MyUserDBEngine.Engine.SetDefaultContext(ctx)
-//
-//	// create table
-//	//err := MyUserDBEngine.Sync(new(models.MyUser))
-//	//if err != nil {
-//	//	panic(err)
-//	//}
-//}

@@ -61,7 +61,6 @@ func UpdateWithOptimisticLock(session *xorm.Session, myInterface interface{}) (i
 
 // UpdateWithPessimisticLock Pessimistic Lock
 func UpdateWithPessimisticLock(session *xorm.Session, myInterface interface{}) (interface{}, error) {
-	logrus.Infof("Lock created")
 	myUser := myInterface.(*models.MyUser)
 	var myUserModel *models.MyUser
 	myUserModel, _, err := models.GetMyUserForUpdateInTxn(session, myUser.UserId)
@@ -75,6 +74,5 @@ func UpdateWithPessimisticLock(session *xorm.Session, myInterface interface{}) (
 	if err != nil {
 		return nil, err
 	}
-	logrus.Infof("Lock released")
 	return affected, nil
 }
