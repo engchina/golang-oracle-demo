@@ -7,17 +7,17 @@ import (
 )
 
 func GetMyUserList() (interface{}, error) {
-	return utils.MyUserDBEngine.ReadOnlyTransaction(service.GetMyUserList)
+	return utils.MyCustomizedEngine.ReadOnlyTransaction(service.GetMyUserList)
 }
 
 func InsertOrUpdate(myUser *models.MyUser) (interface{}, error) {
-	return utils.MyUserDBEngine.ReadWriteTransaction(service.InsertOrUpdate, myUser)
+	return utils.MyCustomizedEngine.ReadWriteTransaction(service.InsertOrUpdate, myUser)
 }
 
 func UpdateWithOptimisticLock(myUser *models.MyUser) (interface{}, error) {
-	return utils.MyUserDBEngine.ReadWriteTransaction(service.UpdateWithOptimisticLock, myUser)
+	return utils.MyCustomizedEngine.ReadWriteTransaction(service.UpdateWithOptimisticLock, myUser)
 }
 
 func UpdateWithPessimisticLock(myUser *models.MyUser) (interface{}, error) {
-	return utils.MyUserDBEngine.ReadWriteTransaction(service.UpdateWithPessimisticLock, myUser)
+	return utils.MyCustomizedEngine.ReadWriteTransaction(service.UpdateWithPessimisticLock, myUser)
 }

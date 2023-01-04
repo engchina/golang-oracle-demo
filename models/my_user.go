@@ -23,10 +23,6 @@ func (*MyUser) TableName() string {
 	return MyUserTableName
 }
 
-type MyUserEngine struct {
-	*xorm.Engine
-}
-
 func GetMyUserInTxn(session *xorm.Session, userId string) (*MyUser, bool, error) {
 	myUser := new(MyUser)
 	has, err := session.Table(MyUserTableName).ID(userId).Get(myUser)
@@ -53,54 +49,4 @@ func (myUser *MyUser) InsertMyUserInTxn(session *xorm.Session) (int64, error) {
 func (myUser *MyUser) UpdateMyUserInTxn(session *xorm.Session) (int64, error) {
 	count, err := session.Table(MyUserTableName).ID(myUser.UserId).Update(myUser)
 	return count, err
-}
-
-func (engine *MyUserEngine) ReadWriteTransaction(f func(*xorm.Session, *MyUser) (interface{}, error), myUser *MyUser) (interface{}, error) {
-	session := engine.NewSession()
-	defer func(session *xorm.Session) {
-		err := session.Close()
-		if err != nil {
-			return
-		}
-	}(session)
-
-	if err := session.Begin(); err != nil {
-		return nil, err
-	}
-
-	result, err := f(session, myUser)
-	if err != nil {
-		return result, err
-	}
-
-	if err := session.Commit(); err != nil {
-		return result, err
-	}
-
-	return result, nil
-}
-
-func (engine *MyUserEngine) ReadOnlyTransaction(f func(*xorm.Session) (interface{}, error)) (interface{}, error) {
-	session := engine.NewSession()
-	defer func(session *xorm.Session) {
-		err := session.Close()
-		if err != nil {
-			return
-		}
-	}(session)
-
-	if err := session.Begin(); err != nil {
-		return nil, err
-	}
-
-	result, err := f(session)
-	if err != nil {
-		return result, err
-	}
-
-	if err := session.Commit(); err != nil {
-		return result, err
-	}
-
-	return result, nil
 }

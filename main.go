@@ -3,15 +3,14 @@ package main
 import (
 	"fmt"
 	"github.com/engchina/golang-oracle-demo/router"
-	"github.com/engchina/golang-oracle-demo/utils"
 	_ "github.com/godror/godror"
 	"github.com/sirupsen/logrus"
 )
 
 func main() {
-	utils.InitConfig()
-	utils.InitOracle()
-	utils.InitMyUserDBEngine()
+	//utils.InitConfig()
+	//utils.InitOracle()
+	//utils.InitCustomizedDBEngine()
 
 	logrus.SetLevel(logrus.InfoLevel)
 

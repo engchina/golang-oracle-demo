@@ -12,6 +12,10 @@ SQL> shutdown immediate;
 SQL> startup;
 ```
 
+### Usage
+
+Open [http://localhost:3000](http://localhost:3000) in your browser.
+
 ### Reference:
 - https://getbootstrap.com/docs/5.2/getting-started/introduction/
 - https://pkg.go.dev/crypto/md5

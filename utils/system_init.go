@@ -11,8 +11,9 @@ import (
 )
 
 var (
-	DBEngine     *xorm.Engine
-	errNewEngine error
+	DBEngine           *xorm.Engine
+	MyCustomizedEngine CustomizedEngine
+	errNewEngine       error
 )
 
 // init config
@@ -53,7 +54,12 @@ func InitOracle() {
 	DBEngine.SetConnMaxLifetime(10 * time.Minute)
 }
 
-//func init() {
-//	initConfig()
-//	initOracle()
-//}
+func InitCustomizedDBEngine() {
+	MyCustomizedEngine.Engine = DBEngine
+}
+
+func init() {
+	InitConfig()
+	InitOracle()
+	InitCustomizedDBEngine()
+}
