@@ -37,7 +37,6 @@ func InsertOrUpdate(session *xorm.Session, myInterface interface{}) (interface{}
 	if err != nil {
 		return -1, err
 	}
-	logrus.Infof("affected is: %#v\n", affected)
 	return affected, nil
 }
 
@@ -50,7 +49,6 @@ func UpdateWithOptimisticLock(session *xorm.Session, myInterface interface{}) (i
 		return nil, err
 	}
 	logrus.Infof("myUserModel is: %#v\n", myUserModel)
-	logrus.Infof("You can try update in another session in 5 seconds, you can succeed and this transaction fail")
 	time.Sleep(5 * time.Second)
 
 	myUserModel.Name = myUser.Name
@@ -58,7 +56,6 @@ func UpdateWithOptimisticLock(session *xorm.Session, myInterface interface{}) (i
 	if err != nil {
 		return -1, err
 	}
-	logrus.Infof("affected is: %#v\n", affected)
 	return affected, nil
 }
 
@@ -71,8 +68,6 @@ func UpdateWithPessimisticLock(session *xorm.Session, myInterface interface{}) (
 	if err != nil {
 		return nil, err
 	}
-	logrus.Infof("myUserModel is: %#v\n", myUserModel)
-	logrus.Infof("You can try update in another session in 5 seconds, you'll fail and this transaction succeed")
 	time.Sleep(5 * time.Second)
 
 	myUserModel.Name = myUser.Name
@@ -80,7 +75,6 @@ func UpdateWithPessimisticLock(session *xorm.Session, myInterface interface{}) (
 	if err != nil {
 		return nil, err
 	}
-	logrus.Infof("affected is: %#v\n", affected)
 	logrus.Infof("Lock released")
 	return affected, nil
 }

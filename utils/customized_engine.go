@@ -8,7 +8,7 @@ type CustomizedEngine struct {
 	*xorm.Engine
 }
 
-func (engine *CustomizedEngine) ReadWriteTransaction(f func(*xorm.Session, interface{}) (interface{}, error), baseModel interface{}) (interface{}, error) {
+func (engine *CustomizedEngine) ReadWriteTransaction(f func(*xorm.Session, interface{}) (interface{}, error), myInterface interface{}) (interface{}, error) {
 	session := engine.NewSession()
 	defer func(session *xorm.Session) {
 		err := session.Close()
@@ -21,7 +21,7 @@ func (engine *CustomizedEngine) ReadWriteTransaction(f func(*xorm.Session, inter
 		return nil, err
 	}
 
-	result, err := f(session, baseModel)
+	result, err := f(session, myInterface)
 	if err != nil {
 		return result, err
 	}
