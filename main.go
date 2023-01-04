@@ -4,16 +4,9 @@ import (
 	"fmt"
 	"github.com/engchina/golang-oracle-demo/router"
 	_ "github.com/godror/godror"
-	"github.com/sirupsen/logrus"
 )
 
 func main() {
-	//utils.InitConfig()
-	//utils.InitOracle()
-	//utils.InitCustomizedDBEngine()
-
-	logrus.SetLevel(logrus.InfoLevel)
-
 	r := router.Router()
 	err := r.Run(":3000")
 	if err != nil {

@@ -3,6 +3,7 @@ package utils
 import (
 	"fmt"
 	_ "github.com/godror/godror"
+	"github.com/sirupsen/logrus"
 	"github.com/spf13/viper"
 	"time"
 	"xorm.io/xorm"
@@ -16,7 +17,10 @@ var (
 	errNewEngine       error
 )
 
-// init config
+func InitLogrus() {
+	logrus.SetLevel(logrus.InfoLevel)
+}
+
 func InitConfig() {
 	viper.SetConfigName("application")
 	viper.AddConfigPath("config")
@@ -27,7 +31,6 @@ func InitConfig() {
 	}
 }
 
-// init database connection
 func InitOracle() {
 	driverName := viper.GetString("oracle.driverName")
 	dataSourceName := viper.GetString("oracle.dataSourceName")
@@ -52,14 +55,12 @@ func InitOracle() {
 	DBEngine.SetMaxOpenConns(5)
 	DBEngine.SetMaxIdleConns(2)
 	DBEngine.SetConnMaxLifetime(10 * time.Minute)
-}
 
-func InitCustomizedDBEngine() {
 	MyCustomizedEngine.Engine = DBEngine
 }
 
 func init() {
+	InitLogrus()
 	InitConfig()
 	InitOracle()
-	InitCustomizedDBEngine()
 }

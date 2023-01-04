@@ -23,6 +23,12 @@ func (*MyUser) TableName() string {
 	return MyUserTableName
 }
 
+func GetMyUserList(session *xorm.Session) ([]*MyUser, error) {
+	allData := make([]*MyUser, 0)
+	err := session.Table(MyUserTableName).OrderBy("user_id").Find(&allData)
+	return allData, err
+}
+
 func GetMyUserInTxn(session *xorm.Session, userId string) (*MyUser, bool, error) {
 	myUser := new(MyUser)
 	has, err := session.Table(MyUserTableName).ID(userId).Get(myUser)
@@ -33,12 +39,6 @@ func GetMyUserForUpdateInTxn(session *xorm.Session, userId string) (*MyUser, boo
 	myUser := new(MyUser)
 	has, err := session.ForUpdate().Table(MyUserTableName).ID(userId).Get(myUser)
 	return myUser, has, err
-}
-
-func GetMyUserList(session *xorm.Session) ([]*MyUser, error) {
-	allData := make([]*MyUser, 0)
-	err := session.Table(MyUserTableName).OrderBy("user_id").Find(&allData)
-	return allData, err
 }
 
 func (myUser *MyUser) InsertMyUserInTxn(session *xorm.Session) (int64, error) {
