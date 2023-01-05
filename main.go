@@ -3,7 +3,6 @@ package main
 import (
 	"fmt"
 	"github.com/engchina/golang-oracle-demo/router"
-	_ "github.com/godror/godror"
 )
 
 func main() {

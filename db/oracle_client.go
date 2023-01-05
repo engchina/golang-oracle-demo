@@ -38,9 +38,9 @@ func InitDBEngine() {
 		panic(fmt.Errorf("error in init new engine %w", errNewEngine))
 	}
 
-	err := DBEngine.Ping()
-	if err != nil {
-		panic(fmt.Errorf("error on ping db: %w", err))
+	errPing := DBEngine.Ping()
+	if errPing != nil {
+		panic(fmt.Errorf("error on ping db: %w", errPing))
 	}
 
 	DBEngine.ShowSQL(false)
@@ -60,11 +60,6 @@ func InitDBEngine() {
 	//if err != nil {
 	//	panic(err)
 	//}
-
-	// set context with timeout
-	//ctx, cancel := context.WithTimeout(context.Background(), 1*time.Minute)
-	//defer cancel()
-	//DBEngine.SetDefaultContext(ctx)
 }
 
 func InitOracleClient() {
