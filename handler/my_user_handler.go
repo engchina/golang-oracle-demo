@@ -7,19 +7,6 @@ import (
 	"net/http"
 )
 
-// PingExample godoc
-// @Summary ping example
-// @Schemes
-// @Description do ping
-// @Tags example
-// @Accept json
-// @Produce json
-// @Success 200 {string} pond
-// @Router /example/ping [get]
-func PingHandler(g *gin.Context) {
-	g.JSON(http.StatusOK, "pond")
-}
-
 func IndexHandler() gin.HandlerFunc {
 	return func(c *gin.Context) {
 		myUserList, err := facade.GetMyUserList()
