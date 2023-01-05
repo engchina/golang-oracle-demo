@@ -2,7 +2,6 @@ package service
 
 import (
 	"github.com/engchina/golang-oracle-demo/models"
-	"github.com/sirupsen/logrus"
 	"time"
 	"xorm.io/xorm"
 )
@@ -48,7 +47,6 @@ func UpdateWithOptimisticLock(session *xorm.Session, in interface{}) (interface{
 	if err != nil {
 		return nil, err
 	}
-	logrus.Infof("myUserModel is: %#v\n", myUserModel)
 	time.Sleep(5 * time.Second)
 
 	myUserModel.Name = myUser.Name
