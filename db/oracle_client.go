@@ -15,7 +15,7 @@ type OracleClientEngine struct {
 }
 
 var (
-	DBEngine     *xorm.Engine
+	XormEngine   *xorm.Engine
 	errNewEngine error
 	OracleClient OracleClientEngine
 )
@@ -30,45 +30,45 @@ func InitConfig() {
 	}
 }
 
-func InitDBEngine() {
+func InitXormEngine() {
 	driverName := viper.GetString("oracle.driverName")
 	dataSourceName := viper.GetString("oracle.dataSourceName")
-	DBEngine, errNewEngine = xorm.NewEngine(driverName, dataSourceName)
+	XormEngine, errNewEngine = xorm.NewEngine(driverName, dataSourceName)
 	if errNewEngine != nil {
 		panic(fmt.Errorf("error in init new engine %w", errNewEngine))
 	}
 
-	errPing := DBEngine.Ping()
+	errPing := XormEngine.Ping()
 	if errPing != nil {
 		panic(fmt.Errorf("error on ping db: %w", errPing))
 	}
 
-	DBEngine.ShowSQL(false)
-	//DBEngine.Logger().SetLevel(log.LOG_DEBUG)
-	DBEngine.Logger().SetLevel(log.LOG_INFO)
-	DBEngine.SetTableMapper(names.GonicMapper{})
-	DBEngine.SetColumnMapper(names.GonicMapper{})
+	XormEngine.ShowSQL(false)
+	//XormEngine.Logger().SetLevel(log.LOG_DEBUG)
+	XormEngine.Logger().SetLevel(log.LOG_INFO)
+	XormEngine.SetTableMapper(names.GonicMapper{})
+	XormEngine.SetColumnMapper(names.GonicMapper{})
 
-	//DBEngine.TZLocation, _ = time.LoadLocation("Asia/Shanghai")
-	DBEngine.TZLocation, _ = time.LoadLocation("Asia/Tokyo")
-	DBEngine.SetMaxOpenConns(5)
-	DBEngine.SetMaxIdleConns(2)
-	DBEngine.SetConnMaxLifetime(10 * time.Minute)
+	//XormEngine.TZLocation, _ = time.LoadLocation("Asia/Shanghai")
+	XormEngine.TZLocation, _ = time.LoadLocation("Asia/Tokyo")
+	XormEngine.SetMaxOpenConns(5)
+	XormEngine.SetMaxIdleConns(2)
+	XormEngine.SetConnMaxLifetime(10 * time.Minute)
 
 	// create table
-	//err := MyUserDBEngine.Sync(new(models.MyUser))
+	//err := MyUserXormEngine.Sync(new(models.MyUser))
 	//if err != nil {
 	//	panic(err)
 	//}
 }
 
 func InitOracleClient() {
-	OracleClient.Engine = DBEngine
+	OracleClient.Engine = XormEngine
 }
 
 func init() {
 	InitConfig()
-	InitDBEngine()
+	InitXormEngine()
 	InitOracleClient()
 }
 
