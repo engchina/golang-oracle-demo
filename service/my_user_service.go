@@ -2,6 +2,7 @@ package service
 
 import (
 	"github.com/engchina/golang-oracle-demo/models"
+	"log"
 	"time"
 	"xorm.io/xorm"
 )
@@ -11,6 +12,7 @@ func GetMyUserList(session *xorm.Session) (interface{}, error) {
 	var allData []*models.MyUser
 	allData, err := models.GetMyUserList(session)
 	if err != nil {
+		log.Println("select err", err)
 		return nil, err
 	}
 	return allData, nil
@@ -22,6 +24,7 @@ func InsertOrUpdate(session *xorm.Session, in interface{}) (interface{}, error) 
 	var myUserModel *models.MyUser
 	myUserModel, has, err := models.GetMyUserInTxn(session, myUser.UserId)
 	if err != nil {
+		log.Println("select err", err)
 		return nil, err
 	}
 
@@ -34,6 +37,7 @@ func InsertOrUpdate(session *xorm.Session, in interface{}) (interface{}, error) 
 	}
 
 	if err != nil {
+		log.Println("insert or update err", err)
 		return -1, err
 	}
 	return affected, nil
@@ -45,6 +49,7 @@ func UpdateWithOptimisticLock(session *xorm.Session, in interface{}) (interface{
 	var myUserModel *models.MyUser
 	myUserModel, _, err := models.GetMyUserInTxn(session, myUser.UserId)
 	if err != nil {
+		log.Println("select err", err)
 		return nil, err
 	}
 	time.Sleep(5 * time.Second)
@@ -52,6 +57,7 @@ func UpdateWithOptimisticLock(session *xorm.Session, in interface{}) (interface{
 	myUserModel.Name = myUser.Name
 	affected, err := myUserModel.UpdateMyUserInTxn(session)
 	if err != nil {
+		log.Println("update err", err)
 		return -1, err
 	}
 	return affected, nil
@@ -63,6 +69,7 @@ func UpdateWithPessimisticLock(session *xorm.Session, in interface{}) (interface
 	var myUserModel *models.MyUser
 	myUserModel, _, err := models.GetMyUserForUpdateInTxn(session, myUser.UserId)
 	if err != nil {
+		log.Println("select err", err)
 		return nil, err
 	}
 	time.Sleep(5 * time.Second)
@@ -70,6 +77,7 @@ func UpdateWithPessimisticLock(session *xorm.Session, in interface{}) (interface
 	myUserModel.Name = myUser.Name
 	affected, err := myUserModel.UpdateMyUserInTxn(session)
 	if err != nil {
+		log.Println("update err", err)
 		return nil, err
 	}
 	return affected, nil

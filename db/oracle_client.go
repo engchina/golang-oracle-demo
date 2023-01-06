@@ -1,12 +1,12 @@
 package db
 
 import (
-	"fmt"
 	_ "github.com/godror/godror"
 	"github.com/spf13/viper"
+	"log"
 	"time"
 	"xorm.io/xorm"
-	"xorm.io/xorm/log"
+	xormlog "xorm.io/xorm/log"
 	"xorm.io/xorm/names"
 )
 
@@ -26,7 +26,7 @@ func InitConfig() {
 	viper.SetConfigType("yaml")
 	err := viper.ReadInConfig()
 	if err != nil {
-		panic(fmt.Errorf("error in read config file %w", err))
+		log.Fatalln("error in read config file", err)
 	}
 }
 
@@ -35,17 +35,17 @@ func InitXormEngine() {
 	dataSourceName := viper.GetString("oracle.dataSourceName")
 	XormEngine, errNewEngine = xorm.NewEngine(driverName, dataSourceName)
 	if errNewEngine != nil {
-		panic(fmt.Errorf("error in init new engine %w", errNewEngine))
+		log.Fatalln("error in init database connection", errNewEngine)
 	}
 
-	errPing := XormEngine.Ping()
-	if errPing != nil {
-		panic(fmt.Errorf("error on ping db: %w", errPing))
-	}
+	//errPing := XormEngine.Ping()
+	//if errPing != nil {
+	//	log.Fatalln("error on ping db", errPing)
+	//}
 
 	XormEngine.ShowSQL(false)
-	//XormEngine.Logger().SetLevel(log.LOG_DEBUG)
-	XormEngine.Logger().SetLevel(log.LOG_INFO)
+	//XormEngine.Logger().SetLevel(xormlog.LOG_DEBUG)
+	XormEngine.Logger().SetLevel(xormlog.LOG_INFO)
 	XormEngine.SetTableMapper(names.GonicMapper{})
 	XormEngine.SetColumnMapper(names.GonicMapper{})
 
@@ -55,10 +55,10 @@ func InitXormEngine() {
 	XormEngine.SetMaxIdleConns(2)
 	XormEngine.SetConnMaxLifetime(10 * time.Minute)
 
-	// create table
-	//err := MyUserXormEngine.Sync(new(models.MyUser))
-	//if err != nil {
-	//	panic(err)
+	//create table
+	//errCreateTable := XormEngine.Sync(new(models.MyUser))
+	//if errCreateTable != nil {
+	//	log.Fatalln("error in create table", errCreateTable)
 	//}
 }
 
@@ -74,24 +74,23 @@ func init() {
 
 func (engine *OracleClientEngine) ReadWriteTransaction(f func(*xorm.Session, interface{}) (interface{}, error), in interface{}) (interface{}, error) {
 	session := engine.NewSession()
-	defer func(session *xorm.Session) {
-		err := session.Close()
-		if err != nil {
-			return
+	defer session.Close()
+	defer func() {
+		if r := recover(); r != nil {
+			session.Rollback()
 		}
-	}(session)
-
+	}()
 	if err := session.Begin(); err != nil {
 		return nil, err
 	}
-
 	result, err := f(session, in)
 	if err != nil {
-		return result, err
+		session.Rollback()
+		return nil, err
 	}
 
 	if err := session.Commit(); err != nil {
-		return result, err
+		return nil, err
 	}
 
 	return result, nil
@@ -99,24 +98,23 @@ func (engine *OracleClientEngine) ReadWriteTransaction(f func(*xorm.Session, int
 
 func (engine *OracleClientEngine) ReadOnlyTransaction(f func(*xorm.Session) (interface{}, error)) (interface{}, error) {
 	session := engine.NewSession()
-	defer func(session *xorm.Session) {
-		err := session.Close()
-		if err != nil {
-			return
+	defer session.Close()
+	defer func() {
+		if r := recover(); r != nil {
+			session.Rollback()
 		}
-	}(session)
-
+	}()
 	if err := session.Begin(); err != nil {
 		return nil, err
 	}
-
 	result, err := f(session)
 	if err != nil {
-		return result, err
+		session.Rollback()
+		return nil, err
 	}
 
 	if err := session.Rollback(); err != nil {
-		return result, err
+		return nil, err
 	}
 
 	return result, nil
