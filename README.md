@@ -1,5 +1,8 @@
 # golang-oracle-demo
 
+### Oracle Database Client Install
+- https://oracle.github.io/odpi/doc/installation.html
+
 ### Update database date format
 ```shell
 sqlplus / as sysdba
