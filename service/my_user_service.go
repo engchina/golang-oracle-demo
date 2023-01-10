@@ -38,7 +38,7 @@ func InsertOrUpdate(session *xorm.Session, in interface{}) (interface{}, error) 
 
 	if err != nil {
 		log.Println("insert or update err", err)
-		return -1, err
+		return 0, err
 	}
 	return affected, nil
 }
@@ -58,7 +58,7 @@ func UpdateWithOptimisticLock(session *xorm.Session, in interface{}) (interface{
 	affected, err := myUserModel.UpdateMyUserInTxn(session)
 	if err != nil {
 		log.Println("update err", err)
-		return -1, err
+		return 0, err
 	}
 	return affected, nil
 }
