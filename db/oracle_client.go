@@ -51,9 +51,10 @@ func InitXormEngine() {
 
 	//XormEngine.TZLocation, _ = time.LoadLocation("Asia/Shanghai")
 	XormEngine.TZLocation, _ = time.LoadLocation("Asia/Tokyo")
-	XormEngine.SetMaxOpenConns(5)
-	XormEngine.SetMaxIdleConns(2)
-	XormEngine.SetConnMaxLifetime(10 * time.Minute)
+	XormEngine.SetMaxOpenConns(50)
+	XormEngine.SetMaxIdleConns(20)
+	XormEngine.SetConnMaxLifetime(time.Hour)
+	XormEngine.SetConnMaxIdleTime(30 * time.Minute)
 
 	//create table
 	//errCreateTable := XormEngine.Sync(new(models.MyUser))
